@@ -1,17 +1,28 @@
-var mapSize = 200;
+var mapSize = 400;
 
-var circleMid = [100,100];
-var circleRadius = 50;
+var transformator = [200,200];
+var housesCoords;
+var numHouses;
+var numDistributions;
+//var circleRadius = 100;
 $(document).ready(function(){
 	$('#clickit').click(function(){
-		numPoints = $('#numPoints').val();
+		numHouses = $('#numHouses').val();
+    numDistributions = $('#numDistributions').val();
 		var popSize = $('#populationSize').val();
 		var generations = $('#numGenerations').val();
 		var mutability = ($('#mutabilityPercent').val()%100)/100;
-		var popDie = ($('#populationDieOff').val()%100)/100; 
-		console.log(numPoints + " " + popSize + " " + generations + " " + mutability + " " + popDie);	       		
+		var popDie = ($('#populationDieOff').val()%100)/100;
+
+    //Generate static houses coordinates.
+    housesCoords = Array();
+    for(var i = 0; i < numHouses*2;i++){
+       housesCoords.push(Math.random()*mapSize);
+    }
+
+		console.log(numHouses + " " + popSize + " " + generations + " " + mutability + " " + popDie);
 		Environment.configure({'populationSize':popSize,'generations':generations, 'mutability':mutability,'populationDieOff':popDie });
-		Environment.Individual.chromosomeLength=numPoints*2;
+		Environment.Individual.chromosomeLength=numHouses+2*numDistributions;
 		Environment.init();
 	});
 });
@@ -23,7 +34,22 @@ function drawMap(generation){
 	ctx.beginPath();
 	ctx.rect(0,0,mapSize,mapSize);
 	ctx.stroke();
-	ctx.fillText(generation,200,20);
+	ctx.fillText(generation,400,20);
+
+  //Draw transformator
+  ctx.beginPath();
+  ctx.arc(transformator[0],transformator[1],10,0,2*Math.PI,true);
+  ctx.fill();
+
+  //Draw houses on each iteration which stays the same
+  for(var i = 0; i < numHouses*2;i++){
+    var x = housesCoords[i];
+    var y = housesCoords[i+1];
+    ctx.beginPath();
+    ctx.arc(x,y,3,0,2*Math.PI,true);
+    ctx.fill();
+  }
+
 }
 
 function distanceTo(pointA, pointB){
@@ -34,15 +60,31 @@ function distanceTo(pointA, pointB){
 Environment.fitnessFunction = function(individual, draw){
 	fitness = 0;	
 	if (draw){
-		
-		var ctx = document.getElementById('gacanvas');	
+		var ctx = document.getElementById('gacanvas');
 		ctx = ctx.getContext('2d');
 	}
-	for(var i = 0; i < individual.chromosomeLength; i+=2){
+  var getHousesConnected = function(distributor){
+    var houses = Array();
+    for(var i = 0; i < numHouses; i++){
+       if(individual.chromosome[i] == distributor){
+         houses.push(housesCoords[2*i]);
+         houses.push(housesCoords[2*i+1]);
+       }
+    }
+    return houses;
+  }
+	for(var i = numHouses; i < individual.chromosomeLength; i+=2){
 		var x = individual.chromosome[i];
 		var y = individual.chromosome[i+1];	
-		distanceToMid = distanceTo([x,y], circleMid);
-		fitness+= Math.abs(circleRadius-distanceToMid);
+		var distanceToTrans = distanceTo([x,y], transformator);
+    var housesConn = getHousesConnected(i - numHouses);
+    for(var j = 0; j < housesConn.length;j+=2){
+        var homeX = housesConn[i];
+        var homeY = housesConn[i+1];
+        var distanceToHome = distanceTo([x,y],[homeX,homeY]);
+        fitness+= Math.abs(distanceToHome);
+    }
+		fitness+= Math.abs(distanceToTrans);
 		
 		if (draw){
 			ctx.beginPath();
@@ -57,7 +99,7 @@ Environment.fitnessFunction = function(individual, draw){
 //Specify my individual - including chromosome length, mate, and init
 Environment.Individual = function(){
         this.fitness = 0;
-        this.chromosomeLength = numPoints*2;
+        this.chromosomeLength = numHouses + (2 * numDistributions);
         this.chromosome = new Array();
         this.mate = function(mutability, mate){
                 if (!mate.chromosome){
@@ -74,9 +116,17 @@ Environment.Individual = function(){
                 return newGuy;
         }
         //Environment.Individual.prototype.init = function(){
-                for (var i = 0; i < this.chromosomeLength;i++){
+
+                //Fill house to distributor edges.
+                for (var i = 0; i < numHouses;i++){
+                  this.chromosome.push(Math.floor(Math.random()*numDistributions));
+                }
+                //Fill distributor coordinates
+                for (var i = numHouses; i < this.chromosomeLength;i++){
                         this.chromosome.push(Math.random()*mapSize);
                 }
+
+  //console.log(this.chromosome);
         //}
 }
 
