@@ -106,25 +106,40 @@ Environment.Individual = function(){
                         throw "Mate does not have a chromosome";
                 }
                 var newGuy = new Environment.Individual();
-                newGuy.chromosome = this.chromosome.slice(0,Math.floor(this.chromosomeLength)).concat(mate.chromosome.slice(Math.floor(this.chromosomeLength)));
+
+                //two-phase mating: either change houses connection, or exchange distributors coordinates vectors.
+
+                if(Math.random() < 0.5){
+                  //crossover only houses connections
+                  var slicer = Math.floor(Math.random()*numHouses);
+                  newGuy.chromosome = this.chromosome.slice(0, slicer).concat(mate.chromosome.slice(slicer, Math.floor(this.chromosomeLength)));
+                } else{
+                  //crossover on distributions coords;
+                  var slicer = Math.floor(Math.random()*numDistributions)*2 + numHouses;
+                  newGuy.chromosome = this.chromosome.slice(0, slicer).concat(mate.chromosome.slice(slicer, Math.floor(this.chromosomeLength)));
+                }
 
                 while (Math.random() < mutability){
-                        var mutateIndex = Math.floor(Math.random()*this.chromosomeLength); //a random gene will be mutated;                     
-                        newGuy.chromosome[mutateIndex] = Math.random()*mapSize;
+                        var mutateIndex = Math.floor(Math.random()*this.chromosomeLength); //a random gene will be mutated;
+                        if (mutateIndex >= numHouses){
+                          newGuy.chromosome[mutateIndex] = Math.random()*mapSize;
+                        }else{
+                          newGuy.chromosome[mutateIndex] = Math.random()*numDistributions;
+                        }
 
                 }
                 return newGuy;
         }
         //Environment.Individual.prototype.init = function(){
 
-                //Fill house to distributor edges.
-                for (var i = 0; i < numHouses;i++){
-                  this.chromosome.push(Math.floor(Math.random()*numDistributions));
-                }
-                //Fill distributor coordinates
-                for (var i = numHouses; i < this.chromosomeLength;i++){
-                        this.chromosome.push(Math.random()*mapSize);
-                }
+        //Fill house to distributor edges.
+        for (var i = 0; i < numHouses;i++){
+          this.chromosome.push(Math.floor(Math.random()*numDistributions));
+        }
+        //Fill distributor coordinates
+        for (var i = numHouses; i < this.chromosomeLength;i++){
+                this.chromosome.push(Math.random()*mapSize);
+        }
 
   //console.log(this.chromosome);
         //}
