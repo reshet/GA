@@ -8,7 +8,7 @@ var numDistributions;
 $(document).ready(function(){
 	$('#clickit').click(function(){
 		numHouses = $('#numHouses').val();
-    numDistributions = $('#numDistributions').val();
+        numDistributions = $('#numDistributions').val();
 		var popSize = $('#populationSize').val();
 		var generations = $('#numGenerations').val();
 		var mutability = ($('#mutabilityPercent').val()%100)/100;
