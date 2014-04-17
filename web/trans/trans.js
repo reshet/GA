@@ -15,17 +15,29 @@ $(document).ready(function(){
 		var popDie = ($('#populationDieOff').val()%100)/100;
 
     //Generate static houses coordinates.
-    housesCoords = Array();
-    for(var i = 0; i < numHouses*2;i++){
-       housesCoords.push(Math.random()*mapSize);
-    }
+        if(housesCoords === undefined){
+            generateHouses(numHouses)
+        }
 
 		console.log(numHouses + " " + popSize + " " + generations + " " + mutability + " " + popDie);
 		Environment.configure({'populationSize':popSize,'generations':generations, 'mutability':mutability,'populationDieOff':popDie });
 		Environment.Individual.chromosomeLength=numHouses+2*numDistributions;
 		Environment.init();
 	});
+
+    $('#genhouses').click(function(){
+        numHouses = parseInt($('#numHouses').val(),10);
+        generateHouses(numHouses);
+        drawMap(0,0);
+    });
 });
+
+function generateHouses(numHouses){
+    housesCoords = Array();
+    for(var i = 0; i < numHouses*2;i++){
+        housesCoords.push(Math.random()*mapSize);
+    }
+}
 
 function drawMap(generation,av){
 	var ctx = document.getElementById('gacanvas');	

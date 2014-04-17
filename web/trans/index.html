@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset='utf-8'>
 <script src='jquery-2.1.0.min.js'></script>
 <script src='environment.js'></script>
 <script src='trans.js'></script>
@@ -9,7 +10,7 @@
 	<canvas height='400px' width='530px' id='gacanvas'></canvas>
 	<br />
 	<label for="numHouses">Кількість домів</label>
-    <input type="text" id="numHouses" value='10'/>
+    <input type="text" id="numHouses" value='60'/>
     <br />
     <label for="numDistributions">Кількість розподіляючих вузлів</label>
     <input type="text" id="numDistributions" value='4'/>
@@ -18,14 +19,17 @@
 	<input type="text" id="numGenerations" value='200'/>
 	<br />
 	<label for="mutabilityPercent" >Ймовірність мутації</label>
-	<input type="text" id="mutabilityPercent" value='20'/>
+	<input type="text" id="mutabilityPercent" value='10'/>
 	<br />
 	<label for="populationSize">Розмір популяції</label>
-	<input type="text" id="populationSize" value='20'/>
+	<input type="text" id="populationSize" value='100'/>
 	<br />
-	<label for="populationDieOff">Процент тих що гинуть в новій популяції</label>
-	<input type="text" id="populationDieOff" value='70'/>
-	<br />
+	<label for="populationDieOff">Процент тих що відбираються не елітарно</label>
+	<input type="text" id="populationDieOff" value='60'/>
+    <br />
+    <a id='genhouses' href="#">Розставити домівки</a>
+    <br />
 	<a id='clickit' href="#">Прогон</a>
+
 </body>
 </html>

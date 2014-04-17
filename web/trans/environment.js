@@ -59,7 +59,8 @@ var Environment = (function () {
 		beforeGeneration: 	function(){},
 		afterGeneration: 	function(){},
 		generation: 		function(){},
-        averageFitness: 0
+        averageFitness: 0,
+        bestFitness: -1000000000
 
 	};
 
@@ -76,10 +77,14 @@ var Environment = (function () {
 
     my.evaluatePopulation = function() {
         my.averageFitness = 0;
+
         for(individual in my.inhabitants){
             var newFitness = my.fitnessFunction(my.inhabitants[individual]);
             my.averageFitness+=newFitness;
 			my.inhabitants[individual].fitness = newFitness;
+            if (newFitness > my.bestFitness){
+                my.bestFitness = newFitness;
+            }
 		}
         my.averageFitness = my.averageFitness/my.inhabitants.length;
 		my.inhabitants.sort(my.sort);
@@ -104,14 +109,22 @@ var Environment = (function () {
 		my.inhabitants = new Array();
 		checkConfiguration();
 		my.currentgen = 0;
+        my.bestFitness = -100000000;
 		populate();
+        my.startTime = new Date().getTime();
 		my.generation();
 	};
 	
 	my.generation = function(){
                 
-		if (my.currentgen >= my.generations)
-			return;
+		if (my.currentgen >= my.generations){
+            my.stopTime = new Date().getTime();
+            console.log("Elapsed time: "+(my.stopTime - my.startTime)/1000);
+            console.log("Average fitness: "+my.averageFitness);
+            console.log("Best fitness: "+my.bestFitness);
+            return;
+        }
+
 		my.beforeGeneration(my.currentgen, my.averageFitness);
                 my.nextGeneration();
 		my.evaluatePopulation();
