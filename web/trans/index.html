@@ -1,0 +1,31 @@
+<html>
+<head>
+<script src='jquery-2.1.0.min.js'></script>
+<script src='environment.js'></script>
+<script src='trans.js'></script>
+</head>
+<body>
+	Генетичний алгоритм намається зменшити шляхи між домами і вузлами розподілу
+	<canvas height='400px' width='530px' id='gacanvas'></canvas>
+	<br />
+	<label for="numHouses">Кількість домів</label>
+    <input type="text" id="numHouses" value='10'/>
+    <br />
+    <label for="numDistributions">Кількість розподіляючих вузлів</label>
+    <input type="text" id="numDistributions" value='4'/>
+    <br />
+    <label for="numGenerations">Кількість поколінь</label>
+	<input type="text" id="numGenerations" value='200'/>
+	<br />
+	<label for="mutabilityPercent" >Ймовірність мутації</label>
+	<input type="text" id="mutabilityPercent" value='20'/>
+	<br />
+	<label for="populationSize">Розмір популяції</label>
+	<input type="text" id="populationSize" value='20'/>
+	<br />
+	<label for="populationDieOff">Процент тих що гинуть в новій популяції</label>
+	<input type="text" id="populationDieOff" value='70'/>
+	<br />
+	<a id='clickit' href="#">Прогон</a>
+</body>
+</html>

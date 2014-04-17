@@ -1,0 +1,31 @@
+<html>
+<head>
+<script src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
+<script src='../../lib/environment.js'></script>
+<script src='trans.js'></script>
+</head>
+<body>
+	This Genetic algorithm attempts to make a circle
+	<canvas height='400px' width='430px' id='gacanvas'></canvas>
+	<br />
+	<label for="numHouses">Кількість домів</label>
+    <input type="text" id="numHouses" value='50'/>
+    <br />
+    <label for="numDistributions">Кількість розподіляючих вузлів</label>
+    <input type="text" id="numDistributions" value='50'/>
+    <br />
+    <label for="numGenerations">Кількість поколінь</label>
+	<input type="text" id="numGenerations" value='2000'/>
+	<br />
+	<label for="mutabilityPercent" >Ймовірність мутації</label>
+	<input type="text" id="mutabilityPercent" value='20'/>
+	<br />
+	<label for="populationSize">Розмір популяції</label>
+	<input type="text" id="populationSize" value='20'/>
+	<br />
+	<label for="populationDieOff">Процент тих що гинуть в новій популяції</label>
+	<input type="text" id="populationDieOff" value='70'/>
+	<br />
+	<a id='clickit' href="#">evolve</a>
+</body>
+</html>
